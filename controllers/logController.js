@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator');
 const esClient = require('../config/elasticsearch')
 
 const ingestLog = async (req, res) => {
+    console.log(`Server hit: ${res.get('X-Server-Id')}`)
     // Validate JSON format
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -23,6 +24,8 @@ const ingestLog = async (req, res) => {
 };
 
 const searchLogs = async (req, res) => {
+    console.log(`Server hit: ${res.get('X-Server-Id')}`)
+    // Validate JSON format
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
