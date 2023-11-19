@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
+const esClient = require('../config/elasticsearch')
 
-const ingestLog = (req, res) => {
+const ingestLog = async (req, res) => {
     // Validate JSON format
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -8,11 +9,17 @@ const ingestLog = (req, res) => {
     }
 
     const logData = req.body;
-    console.log(logData);
-    // TODO: Implement log ingestion logic (e.g., store in a database)
-
-    console.log('Received log:', logData);
-    res.status(200).send('Log received successfully');
+    try {
+        // Index the log data in Elasticsearch
+        await esClient.index({
+            index: process.env.ELASTICSEARCH_INDEX || 'logs',
+            body: logData,
+        });
+        res.status(200).send('Log received and indexed successfully');
+    } catch (error) {
+        console.error('Error indexing log data to Elasticsearch:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 };
 
 module.exports = {
