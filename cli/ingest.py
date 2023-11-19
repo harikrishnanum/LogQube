@@ -86,7 +86,7 @@ def generate_random_log():
     log = {
         'level': get_random_level(),
         'message': get_random_log_message(),
-        'resourceId': get_id(),
+        'resourceId': f'server-{random.randint(1000, 9999)}',
         'timestamp': get_random_timestamp(),
         'traceId': get_id(),
         'spanId': get_id(),

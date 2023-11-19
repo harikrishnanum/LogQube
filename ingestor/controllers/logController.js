@@ -38,7 +38,6 @@ const searchLogs = async (req, res) => {
                 match: {
                     message: {
                         query,
-                        fuzziness: 'auto', // Enables fuzzy matching
                     },
                 },
             } : {
@@ -47,32 +46,29 @@ const searchLogs = async (req, res) => {
             },
 
             // Dynamically add more must clauses for additional filters
-            ...Object.keys(filters).map((field) => ({
-                match: { [field]: filters[field] },
-            })),
+            ...Object.keys(filters)
+                .filter((field) => field !== 'startDate' && field !== 'endDate')
+                .map((field) => ({
+                    term: { [`${field}.keyword`]: filters[field] },
+                })),
         ];
-
-        console.log(mustClauses);
-
+        if (filters.startDate && filters.endDate) {
+            mustClauses.push({
+                range: {
+                    timestamp: {
+                        gte: filters.startDate,
+                        lte: filters.endDate,
+                    },
+                },
+            });
+        }
+        mustClauses.forEach((q) => console.log(q))
         const response = await esClient.search({
             index: process.env.ELASTICSEARCH_INDEX || 'logs',
             body: {
                 query: {
                     bool: {
                         must: mustClauses,
-                        filter: [
-                            // Date range filter
-                            filters.startDate && filters.endDate
-                                ? {
-                                    range: {
-                                        timestamp: {
-                                            gte: filters.startDate,
-                                            lte: filters.endDate,
-                                        },
-                                    },
-                                }
-                                : null,
-                        ].filter(Boolean), // Remove null values from the array
                     },
                 },
                 sort: [{ timestamp: { order: 'desc' } }], // Sort by timestamp in descending order
