@@ -1,7 +1,3 @@
-Certainly! Below is a sample README for your project:
-
----
-
 # Log Ingestor and Query Interface
 
 ## Project Overview
@@ -82,6 +78,10 @@ This project provides a log ingestor system that efficiently handles vast volume
     ```bash
     python3 search.py --filter "startDate=2023-09-10T00:00:00Z" "endDate=2023-09-15T23:59:59Z"
     ```
+
+## Video
+
+[![Watch the video](https://img.youtube.com/vi/siprvfdt-co/0.jpg)](https://www.youtube.com/watch?v=siprvfdt-co)
 
 ## Identified Issues
 
