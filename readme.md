@@ -4,7 +4,7 @@
 
 This project provides a log ingestor system that efficiently handles vast volumes of log data and offers a simple interface for querying this data using full-text search or specific field filters.
 
-![System architecture](./design.jpg)
+![System architecture](./images/design.jpg)
 
 ## Run Instructions
 
@@ -40,7 +40,7 @@ This project provides a log ingestor system that efficiently handles vast volume
     ```bash
     python3 ingest.py 100  # Generates 100 logs
     ```
-
+    ![Data ingestion](./images/ingest.jpg)
 ## Searching
 
 - Basic search without any filters:
@@ -48,7 +48,7 @@ This project provides a log ingestor system that efficiently handles vast volume
     ```bash
     python3 search.py
     ```
-
+![Search](./images/search.jpg)
 - Find all logs with the level set to "error":
 
     ```bash
