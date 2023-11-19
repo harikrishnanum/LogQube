@@ -16,7 +16,7 @@ const ingestLog = async (req, res) => {
             index: process.env.ELASTICSEARCH_INDEX || 'logs',
             body: logData,
         });
-        res.status(200).send('Log received and indexed successfully');
+        res.status(200).send(`Log received and indexed successfully, Server: ${res.get('X-Server-Id')}`);
     } catch (error) {
         console.error('Error indexing log data to Elasticsearch:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -34,14 +34,17 @@ const searchLogs = async (req, res) => {
     const { query, filters, page = 1, pageSize = 10 } = req.body;
     try {
         const mustClauses = [
-            {
+            query ? {
                 match: {
                     message: {
                         query,
                         fuzziness: 'auto', // Enables fuzzy matching
                     },
                 },
-            }, // Full-text search on the 'message' field
+            } : {
+                // If query is not provided, match all documents
+                match_all: {},
+            },
 
             // Dynamically add more must clauses for additional filters
             ...Object.keys(filters).map((field) => ({
@@ -91,6 +94,7 @@ const searchLogs = async (req, res) => {
                 totalHits,
                 totalPages,
             },
+            server: res.get('X-Server-Id')
         });
     } catch (error) {
         console.error('Error executing search:', error);

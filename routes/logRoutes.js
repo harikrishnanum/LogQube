@@ -21,7 +21,7 @@ router.post('/ingest', ingestValidation, logController.ingestLog);
 
 // Validation schema for the filters
 const searchValidation = [
-    body('query').isString().notEmpty(),
+    body('query').optional().isString(),
     body('filters.level').optional().isString(),
     body('filters.message').optional().isString(),
     body('filters.resourceId').optional().isString(),
