@@ -2,11 +2,11 @@ FROM node:18
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY ./ingestor/package*.json ./
 
 RUN npm install
 
-COPY . .
+COPY ./ingestor .
 
 EXPOSE 3000
 
